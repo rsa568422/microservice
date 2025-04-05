@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ public class MonthlyScheduler {
     @Getter
     private final Month month;
 
-    private final Map<LocalDate, DailyScheduler> days = new HashMap<>();
+    private final Map<Integer, DailyScheduler> days = new HashMap<>();
 
     public void add(@NonNull DailyScheduler scheduler) {
         if (scheduler.isEmpty()) {
@@ -34,18 +33,18 @@ public class MonthlyScheduler {
         if (!month.equals(scheduler.getDate().getMonth())) {
             throw new IllegalArgumentException("Daily scheduler month not equals to monthly scheduler month");
         }
-        if (days.containsKey(scheduler.getDate())) {
+        if (days.containsKey(scheduler.getDate().getDayOfMonth())) {
             throw new IllegalArgumentException("A schedule is already available for that day");
         }
         final var day = scheduler.getDate().getDayOfWeek();
         if (WEEKEND.contains(day)) {
             throw new IllegalArgumentException("Weekends are non-working days");
         }
-        days.put(scheduler.getDate(), scheduler);
+        days.put(scheduler.getDate().getDayOfMonth(), scheduler);
     }
 
-    public Optional<DailyScheduler> get(LocalDate date) {
-        return Optional.ofNullable(days.get(date));
+    public Optional<DailyScheduler> get(int day) {
+        return Optional.ofNullable(days.get(day));
     }
 
     @Override
