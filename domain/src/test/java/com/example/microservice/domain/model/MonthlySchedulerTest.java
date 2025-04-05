@@ -49,7 +49,7 @@ class MonthlySchedulerTest {
 
         assertAll(
                 () -> {
-                    final var daily = scheduler.get(LocalDate.of(2025, Month.JANUARY, 1));
+                    final var daily = scheduler.get(1);
                     assertTrue(daily.isPresent());
                     assertEquals(Data.DAILY_SCHEDULER_1, daily.get());
                 },
@@ -69,7 +69,7 @@ class MonthlySchedulerTest {
         scheduler.add(Data.DAILY_SCHEDULER_1);
 
         // when
-        final var daily = scheduler.get(LocalDate.of(2025, Month.JANUARY, 1));
+        final var daily = scheduler.get(1);
 
         // then
         assertTrue(daily.isPresent());
