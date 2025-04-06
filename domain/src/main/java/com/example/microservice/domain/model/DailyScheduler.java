@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Planificación diaria
+ */
 @Builder
 public class DailyScheduler {
 
@@ -21,6 +24,12 @@ public class DailyScheduler {
         return Set.copyOf(tasks);
     }
 
+    /**
+     * Agrega una tarea a la planificación diaria. Dará un error si la tarea no se encuentra en el estado
+     * {@link com.example.microservice.domain.model.Status#PENDING}, si la duración de la tarea sobrepasa el tiempo
+     * restante de la jornada o si la tarea ya está planificada para ese día.
+     * @param task {@link Task} Tarea a agregar a la planificación.
+     */
     public void add(@NonNull Task task) {
         if (!Status.PENDING.equals(task.getStatus())) {
             throw new IllegalArgumentException("Only pending tasks can be added to the scheduler");
@@ -36,14 +45,30 @@ public class DailyScheduler {
         tasks.add(task);
     }
 
+
+    /**
+     * Consulta si la planificación no tiene tareas asignadas.
+     * @return {@link true} si la planificación no tiene tareas asignadas, {@link false} en caso contrario.
+     */
     public boolean isEmpty() {
         return tasks.isEmpty();
     }
 
+    /**
+     * Consulta si la planificación tiene tareas para completar la jornada.
+     * @return {@link true} si la planificación tiene tareas con una duración total de ocho horas o más, {@link false}
+     * en caso contrario.
+     */
     public boolean isFull() {
-        return Duration.ofMinutes(8).compareTo(total()) <= 0;
+        return Duration.ofHours(8).compareTo(total()) <= 0;
     }
 
+    /**
+     * Compara una planificación diaria con el objeto recibido como parámetro, si este es un objeto del tipo
+     * {@link DailyScheduler} y tiene la misma fecha se considerará que son iguales.
+     * @param o {@link Object} Objeto a comparar.
+     * @return Devuelve {@link true } si tienen la misma fecha, {@link false} en otro caso
+     */
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof DailyScheduler that)) return false;

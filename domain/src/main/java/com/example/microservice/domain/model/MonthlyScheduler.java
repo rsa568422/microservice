@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Planificación mensual.
+ */
 @Builder
 public class MonthlyScheduler {
 
@@ -23,6 +26,14 @@ public class MonthlyScheduler {
 
     private final Map<Integer, DailyScheduler> days = new HashMap<>();
 
+
+    /**
+     * Agrega una planificación diaria a la planificación mensual. Dará un error si la planificación diaria está vacía,
+     * si el mes o el año de la planificación mensual no coinciden con la fecha de la planificación diaria, si la
+     * planificación mensual ya dispone de una planificación diaria para esa fecha o si la fecha de la planificación
+     * diaria corresponde a un sábado o domingo.
+     * @param scheduler {@link DailyScheduler} Planificación diaria a agregar a la planificación mensual.
+     */
     public void add(@NonNull DailyScheduler scheduler) {
         if (scheduler.isEmpty()) {
             throw new IllegalArgumentException("Can not add daily scheduler without tasks");
@@ -47,6 +58,12 @@ public class MonthlyScheduler {
         return Optional.ofNullable(days.get(day));
     }
 
+    /**
+     * Compara una planificación mensual con el objeto recibido como parámetro, si este es un objeto del tipo
+     * {@link MonthlyScheduler} y tiene el mismo año y mes se considerará que son iguales.
+     * @param o {@link Object} Objeto a comparar.
+     * @return Devuelve {@link true } si tienen el mísmo año y mes, {@link false} en otro caso
+     */
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof MonthlyScheduler that)) return false;

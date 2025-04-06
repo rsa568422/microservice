@@ -2,10 +2,12 @@ package com.example.microservice.domain.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.Duration;
 
+/**
+ * Información de la tarea a realizar
+ */
 @Getter
 @Builder
 public class Task {
@@ -18,9 +20,14 @@ public class Task {
 
     private final Duration duration;
 
-    @Setter
     private Status status;
 
+    /**
+     * Compara una tarea con el objeto recibido como parámetro, si este es un objeto del tipo {@link Task} y tiene el
+     * mismo código de tarea se considerará que son iguales.
+     * @param o {@link Object} Objeto a comparar.
+     * @return Devuelve {@link true } si tienen el mísmo código de tarea, {@link false} en otro caso
+     */
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof Task task)) return false;
@@ -30,5 +37,9 @@ public class Task {
     @Override
     public int hashCode() {
         return code.hashCode();
+    }
+
+    protected void setStatus(Status status) {
+        this.status = status;
     }
 }

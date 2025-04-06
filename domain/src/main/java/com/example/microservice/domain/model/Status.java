@@ -1,3 +1,15 @@
 package com.example.microservice.domain.model;
 
-public enum Status { PENDING, WORKING }
+/**
+ * Estado de la tarea.
+ */
+public enum Status {
+    /**
+     * Tarea pendiente de asignar
+     */
+    PENDING,
+    /**
+     * Tarea en proceso
+     */
+    WORKING
+}
