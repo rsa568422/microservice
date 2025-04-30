@@ -1,0 +1,25 @@
+services:
+  jpa:
+    image: postgres:latest
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: jpa
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - jpa_data:/var/lib/jpa/data
+  mybatis:
+    image: postgres:latest
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_DB: mybatis
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - mybatis_data:/var/lib/mybatis/data
+
+volumes:
+  jpa_data:
+  mybatis_data:
