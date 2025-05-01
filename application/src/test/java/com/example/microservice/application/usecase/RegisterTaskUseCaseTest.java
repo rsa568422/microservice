@@ -43,7 +43,7 @@ class RegisterTaskUseCaseTest {
         final var newTask = NewTask.builder()
                 .description("description")
                 .priority(Priority.HIGH)
-                .duration(Duration.ofHours(1))
+                .duration(1)
                 .build();
 
         final var task = Task.builder()

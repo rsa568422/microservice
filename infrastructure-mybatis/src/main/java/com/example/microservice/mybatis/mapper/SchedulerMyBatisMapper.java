@@ -8,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -24,10 +26,14 @@ public class SchedulerMyBatisMapper {
             return Optional.empty();
         }
         final var first = schedulers.get(0);
-        final var date = LocalDate.of(first.getYear(), first.getMonth(), first.getDay());
-        final var scheduler = DailyScheduler.builder().date(date).build();
+        return toModel(first.getYear(), Month.of(first.getMonth()), first.getDay(), schedulers);
+    }
+
+    public Optional<DailyScheduler> toModel(@NonNull Integer year, @NonNull Month month, @NonNull Integer day,
+                                            @NonNull List<SchedulerEntity> schedulers) {
+        final var scheduler = DailyScheduler.builder().date(LocalDate.of(year, month, day)).build();
         schedulers.stream()
-                .map(scheduledTask -> taskRepository.findByCode(scheduledTask.getTask().toString()))
+                .map(scheduledTask -> taskRepository.findByCode(scheduledTask.getTask()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(scheduler::add);
@@ -38,12 +44,21 @@ public class SchedulerMyBatisMapper {
         return scheduler.getTasks().stream().map(task -> toEntity(scheduler.getDate(), task.getCode())).toList();
     }
 
-    private static SchedulerEntity toEntity(LocalDate date, String code) {
+    public static SchedulerEntity toEntity(LocalDate date, String code) {
         final var scheduler = new SchedulerEntity();
         scheduler.setYear(date.getYear());
         scheduler.setMonth(date.getMonthValue());
         scheduler.setDay(date.getDayOfMonth());
-        scheduler.setTask(UUID.fromString(code));
+        scheduler.setTask(code);
         return scheduler;
+    }
+
+    public List<DailyScheduler> toModel(@NonNull Year year, @NonNull Month month, Map<Integer, List<SchedulerEntity>> map) {
+        return map.entrySet()
+                .stream()
+                .map(entry -> toModel(year.getValue(), month, entry.getKey(), entry.getValue()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
     }
 }

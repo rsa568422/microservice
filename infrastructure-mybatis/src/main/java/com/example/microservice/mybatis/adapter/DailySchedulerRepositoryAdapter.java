@@ -2,6 +2,7 @@ package com.example.microservice.mybatis.adapter;
 
 import com.example.microservice.domain.model.DailyScheduler;
 import com.example.microservice.domain.repository.DailySchedulerRepository;
+import com.example.microservice.mybatis.entity.SchedulerEntity;
 import com.example.microservice.mybatis.mapper.SchedulerMyBatisMapper;
 import com.example.microservice.mybatis.repository.SchedulerMyBatisRepository;
 import lombok.NonNull;
@@ -27,7 +28,15 @@ public class DailySchedulerRepositoryAdapter implements DailySchedulerRepository
 
     @Override
     public void save(@NonNull DailyScheduler scheduler) {
-        final var schedulers = mapper.toEntities(scheduler);
-        schedulers.forEach(repository::save);
+        final var date = scheduler.getDate();
+        final var tasks = repository.findByDate(date.getYear(), date.getMonthValue(), date.getDayOfMonth())
+                .stream()
+                .map(SchedulerEntity::getTask)
+                .toList();
+        scheduler.getTasks()
+                .stream()
+                .filter(task -> !tasks.contains(task.getCode()))
+                .map(task -> SchedulerMyBatisMapper.toEntity(date, task.getCode()))
+                .forEach(repository::save);
     }
 }

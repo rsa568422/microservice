@@ -3,12 +3,11 @@ package com.example.microservice.domain.repository;
 import com.example.microservice.domain.model.MonthlyScheduler;
 import lombok.NonNull;
 
+import java.time.Month;
 import java.time.Year;
-import java.util.Set;
+import java.util.Optional;
 
 public interface MonthlySchedulerRepository {
 
-    Set<MonthlyScheduler> findByYear(@NonNull Year year);
-
-    void save(@NonNull MonthlyScheduler scheduler);
+    Optional<MonthlyScheduler> findByYearAndMonth(@NonNull Year year, @NonNull Month month);
 }

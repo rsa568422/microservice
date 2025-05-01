@@ -30,15 +30,7 @@ class DailySchedulerTest {
                 .date(LocalDate.of(2025, Month.JANUARY, 1))
                 .build();
         final var task = Data.TASK_1_1.build();
-        final var taskB = Data.TASK_1_1.build();
-        final var badTask1 = Task.builder()
-                .code("CODE#BAD1")
-                .description("description of bad task 1")
-                .priority(Priority.CRITICAL)
-                .duration(Duration.ofHours(4))
-                .status(Status.WORKING)
-                .build();
-        final var badTask2 = Task.builder()
+        final var badTask = Task.builder()
                 .code("CODE#BAD2")
                 .description("description of bad task 2")
                 .priority(Priority.CRITICAL)
@@ -48,24 +40,16 @@ class DailySchedulerTest {
 
         // when
         assertDoesNotThrow(() -> scheduler.add(task));
-        final var error1 = assertThrows(IllegalArgumentException.class, () -> scheduler.add(badTask1));
-        final var error2 = assertThrows(IllegalArgumentException.class, () -> scheduler.add(badTask2));
-        final var error3 = assertThrows(IllegalArgumentException.class, () -> {
-            scheduler.add(taskB);
-            taskB.setStatus(Status.PENDING);
-            scheduler.add(taskB);
-        });
-        final var error4 = assertThrows(RuntimeException.class, () -> scheduler.add(null));
+        final var error1 = assertThrows(IllegalArgumentException.class, () -> scheduler.add(badTask));
+        final var error2 = assertThrows(RuntimeException.class, () -> scheduler.add(null));
 
         // then
         assertAll(
                 () -> assertEquals(1, scheduler.getTasks().size()),
                 () -> assertTrue(scheduler.getTasks().contains(Data.TASK_1_1.build())),
                 () -> assertEquals(Status.WORKING, task.getStatus()),
-                () -> assertEquals("Only pending tasks can be added to the scheduler", error1.getMessage()),
-                () -> assertEquals("Total planning exceeds eight hours", error2.getMessage()),
-                () -> assertEquals("The task is already added to de scheduler", error3.getMessage()),
-                () -> assertEquals("task is marked non-null but is null", error4.getMessage())
+                () -> assertEquals("Total planning exceeds eight hours", error1.getMessage()),
+                () -> assertEquals("task is marked non-null but is null", error2.getMessage())
         );
     }
 

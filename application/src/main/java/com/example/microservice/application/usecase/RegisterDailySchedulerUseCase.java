@@ -25,16 +25,16 @@ public class RegisterDailySchedulerUseCase {
      * @param scheduler {@link NewDailyScheduler} Información de la nueva planificación.
      */
     public void execute(@NonNull NewDailyScheduler scheduler) {
-        final var tasks = scheduler.getTaskCodes()
+        final var tasks = scheduler.taskCodes()
                 .stream()
                 .map(taskService::findByCode)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
-        if (tasks.size() < scheduler.getTaskCodes().size()) {
+        if (tasks.size() < scheduler.taskCodes().size()) {
             throw new IllegalArgumentException("The daily scheduler contains not registered tasks");
         }
-        schedulerService.save(schedulerMapper.toDailyScheduler(scheduler.getDate(), tasks));
+        schedulerService.save(schedulerMapper.toDailyScheduler(scheduler.date(), tasks));
         tasks.forEach(taskService::save);
     }
 }

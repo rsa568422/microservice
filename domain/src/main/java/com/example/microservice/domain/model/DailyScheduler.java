@@ -31,15 +31,9 @@ public class DailyScheduler {
      * @param task {@link Task} Tarea a agregar a la planificación.
      */
     public void add(@NonNull Task task) {
-        if (!Status.PENDING.equals(task.getStatus())) {
-            throw new IllegalArgumentException("Only pending tasks can be added to the scheduler");
-        }
         final var estimation = Duration.ofMinutes(total().toMinutes() + task.getDuration().toMinutes());
         if (Duration.ofHours(8).compareTo(estimation) < 0) {
             throw new IllegalArgumentException("Total planning exceeds eight hours");
-        }
-        if (tasks.stream().map(Task::getCode).toList().contains(task.getCode())) {
-            throw new IllegalArgumentException("The task is already added to de scheduler");
         }
         task.setStatus(Status.WORKING);
         tasks.add(task);

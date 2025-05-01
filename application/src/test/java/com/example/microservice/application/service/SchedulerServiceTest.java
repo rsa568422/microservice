@@ -1,7 +1,6 @@
 package com.example.microservice.application.service;
 
 import com.example.microservice.domain.model.DailyScheduler;
-import com.example.microservice.domain.model.MonthlyScheduler;
 import com.example.microservice.domain.repository.DailySchedulerRepository;
 import com.example.microservice.domain.repository.MonthlySchedulerRepository;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -72,36 +70,15 @@ class SchedulerServiceTest {
     }
 
     @Test
-    void testFindByYearAndMont() {
-        // given
-        final var year = Year.of(2025);
-        final var monthly = MonthlyScheduler.builder().year(year).month(Month.JANUARY).build();
-
-        when(monthlySchedulerRepository.findByYear(year)).thenReturn(Set.of(monthly));
-
-        // when
-        final var actual = schedulerService.findByYearAndMont(year, Month.JANUARY);
-
-        // then
-        assertAll(
-                () -> assertNotNull(actual),
-                () -> assertEquals(Optional.of(monthly), actual)
-        );
-
-        verify(monthlySchedulerRepository, times(1)).findByYear(year);
-        verifyNoMoreInteractions(dailySchedulerRepository, monthlySchedulerRepository);
-    }
-
-    @Test
-    void testFindByYearAndMontNull() {
+    void testFindByYearAndMonthNull() {
         // when
         final var error1 = assertThrows(
                 RuntimeException.class,
-                () -> schedulerService.findByYearAndMont(null, Month.JANUARY)
+                () -> schedulerService.findByYearAndMonth(null, Month.JANUARY)
         );
         final var error2 = assertThrows(
                 RuntimeException.class,
-                () -> schedulerService.findByYearAndMont(Year.of(2025), null)
+                () -> schedulerService.findByYearAndMonth(Year.of(2025), null)
         );
 
         // then
@@ -131,32 +108,6 @@ class SchedulerServiceTest {
     void testSaveDailyNull() {
         // when
         final var actual = assertThrows(RuntimeException.class, () -> schedulerService.save((DailyScheduler) null));
-
-        // then
-        assertAll(
-                () -> assertNotNull(actual),
-                () -> assertEquals("scheduler is marked non-null but is null", actual.getMessage())
-        );
-    }
-
-    @Test
-    void testSaveMonthly() {
-        // given
-        final var year = Year.of(2025);
-        final var monthly = MonthlyScheduler.builder().year(year).month(Month.JANUARY).build();
-
-        // when
-        assertDoesNotThrow(() -> schedulerService.save(monthly));
-
-        // then
-        verify(monthlySchedulerRepository, times(1)).save(monthly);
-        verifyNoMoreInteractions(dailySchedulerRepository, monthlySchedulerRepository);
-    }
-
-    @Test
-    void testSaveMonthlyNull() {
-        // when
-        final var actual = assertThrows(RuntimeException.class, () -> schedulerService.save((MonthlyScheduler) null));
 
         // then
         assertAll(
