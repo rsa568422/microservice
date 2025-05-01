@@ -10,8 +10,6 @@ import java.time.Duration;
 @Builder
 public class NewTask {
 
-    private final String code;
-
     private final String description;
 
     private final Priority priority;

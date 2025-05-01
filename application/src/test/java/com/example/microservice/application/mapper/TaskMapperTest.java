@@ -20,7 +20,6 @@ class TaskMapperTest {
     void testToTask() {
         // given
         final var newTask = NewTask.builder()
-                .code("CODE")
                 .description("description")
                 .priority(Priority.HIGH)
                 .duration(Duration.ofHours(1))
@@ -32,7 +31,6 @@ class TaskMapperTest {
         // then
         assertAll(
                 () -> assertNotNull(actual),
-                () -> assertEquals(newTask.getCode(), actual.getCode()),
                 () -> assertEquals(newTask.getDescription(), actual.getDescription()),
                 () -> assertEquals(newTask.getPriority(), actual.getPriority()),
                 () -> assertEquals(newTask.getDuration(), actual.getDuration()),

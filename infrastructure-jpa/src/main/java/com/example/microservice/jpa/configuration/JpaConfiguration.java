@@ -1,6 +1,7 @@
 package com.example.microservice.jpa.configuration;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -9,11 +10,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.example.microservice.jpa.configuration.Constants.HIBERNATE_DIALECT;
 import static com.example.microservice.jpa.configuration.Constants.HIBERNATE_HBM_2_DDL_AUTO;
@@ -57,5 +62,18 @@ public class JpaConfiguration {
     public PlatformTransactionManager jpaTransactionManager(@Qualifier(JPA_ENTITY_MANAGER_FACTORY)
                                                             EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
+    }
+
+    @Bean
+    public EntityManagerFactoryBuilder entityManagerFactoryBuilder(
+            JpaVendorAdapter jpaVendorAdapter,
+            ObjectProvider<PersistenceUnitManager> persistenceUnitManager) {
+        final Function<DataSource, Map<String, ?>> function = dataSource -> Map.of("jpa", dataSource);
+        return new EntityManagerFactoryBuilder(jpaVendorAdapter, function, persistenceUnitManager.getIfAvailable());
+    }
+
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter() {
+        return new HibernateJpaVendorAdapter();
     }
 }

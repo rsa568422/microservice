@@ -14,7 +14,7 @@ public final class Constants {
 
     public static final String JPA_DATASOURCE = "jpaDataSource";
 
-    public static final String JPA_DATASOURCE_PROPERTIES = "tasks.datasource";
+    public static final String JPA_DATASOURCE_PROPERTIES = "spring.datasource.jpa";
 
     public static final String JPA_ENTITY_MANAGER_FACTORY = "jpaEntityManagerFactory";
 
