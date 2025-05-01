@@ -23,18 +23,11 @@ public class SchedulerService {
         return dailySchedulerRepository.findByDate(date);
     }
 
-    public Optional<MonthlyScheduler> findByYearAndMont(@NonNull Year year, @NonNull Month month) {
-        return monthlySchedulerRepository.findByYear(year)
-                .stream()
-                .filter(monthly -> month.equals(monthly.getMonth()))
-                .findAny();
+    public Optional<MonthlyScheduler> findByYearAndMonth(@NonNull Year year, @NonNull Month month) {
+        return monthlySchedulerRepository.findByYearAndMonth(year, month);
     }
 
     public void save(@NonNull DailyScheduler scheduler) {
         dailySchedulerRepository.save(scheduler);
-    }
-
-    public void save(@NonNull MonthlyScheduler scheduler) {
-        monthlySchedulerRepository.save(scheduler);
     }
 }

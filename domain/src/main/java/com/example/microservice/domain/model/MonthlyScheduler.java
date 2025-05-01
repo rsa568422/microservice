@@ -54,6 +54,10 @@ public class MonthlyScheduler {
         days.put(scheduler.getDate().getDayOfMonth(), scheduler);
     }
 
+    public Map<Integer, DailyScheduler> getDays() {
+        return Map.copyOf(days);
+    }
+
     public Optional<DailyScheduler> get(int day) {
         return Optional.ofNullable(days.get(day));
     }

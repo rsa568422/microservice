@@ -6,8 +6,6 @@ import com.example.microservice.domain.model.Status;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,10 +18,9 @@ class TaskMapperTest {
     void testToTask() {
         // given
         final var newTask = NewTask.builder()
-                .code("CODE")
                 .description("description")
                 .priority(Priority.HIGH)
-                .duration(Duration.ofHours(1))
+                .duration(1)
                 .build();
 
         // when
@@ -32,10 +29,9 @@ class TaskMapperTest {
         // then
         assertAll(
                 () -> assertNotNull(actual),
-                () -> assertEquals(newTask.getCode(), actual.getCode()),
-                () -> assertEquals(newTask.getDescription(), actual.getDescription()),
-                () -> assertEquals(newTask.getPriority(), actual.getPriority()),
-                () -> assertEquals(newTask.getDuration(), actual.getDuration()),
+                () -> assertEquals(newTask.description(), actual.getDescription()),
+                () -> assertEquals(newTask.priority(), actual.getPriority()),
+                () -> assertEquals(newTask.duration().longValue(), actual.getDuration().toMinutes()),
                 () -> assertEquals(Status.PENDING, actual.getStatus())
         );
     }

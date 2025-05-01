@@ -1,5 +1,7 @@
 package com.example.microservice.application.usecase;
 
+import com.example.microservice.application.dto.OutputTask;
+import com.example.microservice.application.mapper.TaskMapper;
 import com.example.microservice.application.service.TaskService;
 import com.example.microservice.domain.model.Priority;
 import com.example.microservice.domain.model.Status;
@@ -33,6 +35,9 @@ class GetPendingTasksByPriorityUseCaseTest {
     @Mock
     private TaskService taskService;
 
+    @Mock
+    private TaskMapper taskMapper;
+
     @Test
     void testExecute() {
         // given
@@ -43,9 +48,17 @@ class GetPendingTasksByPriorityUseCaseTest {
                 .duration(Duration.ofHours(1))
                 .status(Status.PENDING)
                 .build();
+        final var output = OutputTask.builder()
+                .code("CODE")
+                .description("description")
+                .duration("1H")
+                .status(Status.PENDING)
+                .build();
         final var tasks = Map.of(Priority.HIGH, Set.of(task));
+        final var expected = Map.of(Priority.HIGH, Set.of(output));
 
         when(taskService.pendingTasksByPriority()).thenReturn(tasks);
+        when(taskMapper.toOutputMap(tasks)).thenReturn(expected);
 
         // when
         final var actual = getPendingTasksByPriorityUseCase.execute();
@@ -59,12 +72,13 @@ class GetPendingTasksByPriorityUseCaseTest {
                     assertAll(
                             () -> assertNotNull(taskSet),
                             () -> assertEquals(1, taskSet.size()),
-                            () -> assertIterableEquals(Set.of(task), taskSet)
+                            () -> assertIterableEquals(Set.of(output), taskSet)
                     );
                 }
         );
 
         verify(taskService, times(1)).pendingTasksByPriority();
-        verifyNoMoreInteractions(taskService);
+        verify(taskMapper, times(1)).toOutputMap(tasks);
+        verifyNoMoreInteractions(taskService, taskMapper);
     }
 }

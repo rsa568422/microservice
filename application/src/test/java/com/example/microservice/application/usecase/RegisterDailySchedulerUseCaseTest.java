@@ -68,12 +68,12 @@ class RegisterDailySchedulerUseCaseTest {
                 .taskCodes(Set.of("CODE"))
                 .build();
         final var scheduler = DailyScheduler.builder()
-                .date(newScheduler.getDate())
+                .date(newScheduler.date())
                 .build();
         scheduler.add(builder.build());
 
         when(taskService.findByCode(task.getCode())).thenReturn(Optional.of(task));
-        when(schedulerMapper.toDailyScheduler(newScheduler.getDate(), Set.of(task))).thenReturn(scheduler);
+        when(schedulerMapper.toDailyScheduler(newScheduler.date(), Set.of(task))).thenReturn(scheduler);
 
         // when
         assertDoesNotThrow(() -> registerDailySchedulerUseCase.execute(newScheduler));
@@ -82,7 +82,7 @@ class RegisterDailySchedulerUseCaseTest {
         verify(taskService, times(1)).findByCode(task.getCode());
         verify(taskService, times(1)).save(taskBefore);
         verify(schedulerService, times(1)).save(scheduler);
-        verify(schedulerMapper, times(1)).toDailyScheduler(newScheduler.getDate(), Set.of(task));
+        verify(schedulerMapper, times(1)).toDailyScheduler(newScheduler.date(), Set.of(task));
         verifyNoMoreInteractions(taskService, schedulerService, schedulerMapper);
     }
 
