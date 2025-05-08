@@ -1,14 +1,15 @@
 services:
   jpa:
-    image: postgres:latest
+    image: mysql:latest
     ports:
-      - 5433:5432
+      - 5433:3306
     environment:
-      POSTGRES_DB: jpa
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      MYSQL_DATABASE: jpa
+      MYSQL_USER: jpa
+      MYSQL_PASSWORD: jpa
+      MYSQL_ROOT_PASSWORD: jpa
     volumes:
-      - jpa_data:/var/lib/jpa/data
+      - jpa_data:/var/lib/mysql
   mybatis:
     image: postgres:latest
     ports:

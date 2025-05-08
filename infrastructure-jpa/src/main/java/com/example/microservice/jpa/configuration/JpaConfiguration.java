@@ -29,7 +29,7 @@ import static com.example.microservice.jpa.configuration.Constants.JPA_ENTITY_MA
 import static com.example.microservice.jpa.configuration.Constants.JPA_ENTITY_PACKAGE;
 import static com.example.microservice.jpa.configuration.Constants.JPA_REPOSITORY_PACKAGE;
 import static com.example.microservice.jpa.configuration.Constants.JPA_TRANSACTION_MANAGER;
-import static com.example.microservice.jpa.configuration.Constants.POSTGRES_SQL_DIALECT;
+import static com.example.microservice.jpa.configuration.Constants.MYSQL_SQL_DIALECT;
 import static com.example.microservice.jpa.configuration.Constants.UPDATE;
 
 @Configuration
@@ -54,7 +54,7 @@ public class JpaConfiguration {
                 .dataSource(dataSource)
                 .packages(JPA_ENTITY_PACKAGE)
                 .persistenceUnit(JPA)
-                .properties(Map.of(HIBERNATE_HBM_2_DDL_AUTO, UPDATE, HIBERNATE_DIALECT, POSTGRES_SQL_DIALECT))
+                .properties(Map.of(HIBERNATE_HBM_2_DDL_AUTO, UPDATE, HIBERNATE_DIALECT, MYSQL_SQL_DIALECT))
                 .build();
     }
 
