@@ -24,7 +24,7 @@ public final class Constants {
 
     public static final String JPA_TRANSACTION_MANAGER = "jpaTransactionManager";
 
-    public static final Object POSTGRES_SQL_DIALECT = "org.hibernate.dialect.PostgreSQLDialect";
+    public static final Object MYSQL_SQL_DIALECT = "org.hibernate.dialect.MySQLDialect";
 
     public static final Object UPDATE = "update";
 }
