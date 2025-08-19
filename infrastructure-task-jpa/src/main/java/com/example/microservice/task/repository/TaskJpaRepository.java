@@ -1,6 +1,5 @@
 package com.example.microservice.task.repository;
 
-import com.example.microservice.domain.model.Status;
 import com.example.microservice.task.entity.TaskEntity;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +13,5 @@ import static com.example.microservice.task.configuration.Constants.JPA_TRANSACT
 @Transactional(JPA_TRANSACTION_MANAGER)
 public interface TaskJpaRepository extends JpaRepository<TaskEntity, UUID> {
 
-    List<TaskEntity> findByStatusOrderByPriorityAsc(@NonNull Status status);
+    List<TaskEntity> findByStatusOrderByPriorityAsc(@NonNull String status);
 }

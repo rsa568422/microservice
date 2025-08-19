@@ -33,7 +33,11 @@ public class TaskRepositoryAdapter implements TaskRepository {
 
     @Override
     public List<Task> findByStatusSortedByPriority(@NonNull Status status) {
-        return taskJpaMapper.toModel(taskJpaRepository.findByStatusOrderByPriorityAsc(status));
+        final var statusValue = switch (status) {
+            case PENDING -> "P";
+            case WORKING -> "W";
+        };
+        return taskJpaMapper.toModel(taskJpaRepository.findByStatusOrderByPriorityAsc(statusValue));
     }
 
     @Override
