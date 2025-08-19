@@ -1,10 +1,11 @@
 package com.example.microservice.spring.configuration;
 
-import com.example.microservice.application.service.SchedulerService;
+import com.example.microservice.application.mapper.TaskMapper;
+import com.example.microservice.application.mapper.WorkerMapper;
+import com.example.microservice.application.port.out.TaskRepository;
+import com.example.microservice.application.port.out.WorkerRepository;
 import com.example.microservice.application.service.TaskService;
-import com.example.microservice.domain.repository.DailySchedulerRepository;
-import com.example.microservice.domain.repository.MonthlySchedulerRepository;
-import com.example.microservice.domain.repository.TaskRepository;
+import com.example.microservice.application.service.WorkerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,13 +13,12 @@ import org.springframework.context.annotation.Configuration;
 public class ServiceConfiguration {
 
     @Bean
-    public TaskService taskService(TaskRepository taskRepository) {
-        return new TaskService(taskRepository);
+    public TaskService taskService(TaskRepository taskRepository, TaskMapper taskMapper) {
+        return new TaskService(taskRepository, taskMapper);
     }
 
     @Bean
-    public SchedulerService schedulerService(DailySchedulerRepository dailySchedulerRepository,
-                                             MonthlySchedulerRepository monthlySchedulerRepository) {
-        return new SchedulerService(dailySchedulerRepository, monthlySchedulerRepository);
+    public WorkerService workerService(WorkerRepository workerRepository, WorkerMapper workerMapper) {
+        return new WorkerService(workerRepository, workerMapper);
     }
 }

@@ -21,11 +21,15 @@
         </dependency>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>infrastructure-jpa</artifactId>
+            <artifactId>infrastructure-task-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>infrastructure-mybatis</artifactId>
+            <artifactId>infrastructure-scheduler-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>infrastructure-worker-mybatis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

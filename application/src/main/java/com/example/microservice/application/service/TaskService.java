@@ -1,32 +1,35 @@
 package com.example.microservice.application.service;
 
-import com.example.microservice.domain.model.Priority;
+import com.example.microservice.application.dto.NewTaskDTO;
+import com.example.microservice.application.mapper.TaskMapper;
+import com.example.microservice.application.port.in.GetPendingTasksByPriorityUseCase;
+import com.example.microservice.application.port.in.RegisterNewTaskUseCase;
+import com.example.microservice.application.port.out.TaskRepository;
+import com.example.microservice.domain.model.Status;
 import com.example.microservice.domain.model.Task;
-import com.example.microservice.domain.repository.TaskRepository;
+import com.example.microservice.domain.service.TaskDomainService;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
-@RequiredArgsConstructor
-public class TaskService {
+public class TaskService extends TaskDomainService<TaskRepository>
+        implements GetPendingTasksByPriorityUseCase, RegisterNewTaskUseCase {
 
-    private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
-    public Optional<Task> findByCode(@NonNull String code) {
-        return taskRepository.findByCode(code);
+    public TaskService(@NonNull TaskRepository taskRepository,
+                       @NonNull TaskMapper taskMapper) {
+        super(taskRepository);
+        this.taskMapper = taskMapper;
     }
 
-    public Map<Priority, Set<Task>> pendingTasksByPriority() {
-        return taskRepository.findAll()
-                .stream()
-                .collect(Collectors.groupingBy(Task::getPriority, Collectors.toSet()));
+    @Override
+    public List<Task> getPendingTasksShortedByPriority() {
+        return repository.findByStatusSortedByPriority(Status.PENDING);
     }
 
-    public void save(@NonNull Task task) {
-        taskRepository.save(task);
+    @Override
+    public void registerNewTask(@NonNull NewTaskDTO newTask) {
+        save(taskMapper.toDomain(newTask));
     }
 }

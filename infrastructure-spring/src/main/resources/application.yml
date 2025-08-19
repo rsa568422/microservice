@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    default: local
+---
+spring:
+  datasource:
+    scheduler:
+      url: ${env.datasource.scheduler.url}
+      jdbc-url: ${env.datasource.scheduler.url}
+      username: ${DATASOURCE_SCHEDULER_USERNAME}
+      password: ${DATASOURCE_SCHEDULER_PASSWORD}
+      driver-class-name: ${env.datasource.scheduler.driver-class-name}
+    task:
+      url: ${env.datasource.task.url}
+      jdbc-url: ${env.datasource.task.url}
+      username: ${DATASOURCE_TASK_USERNAME}
+      password: ${DATASOURCE_TASK_PASSWORD}
+      driver-class-name: ${env.datasource.task.driver-class-name}
+    worker:
+      url: ${env.datasource.worker.url}
+      jdbc-url: ${env.datasource.worker.url}
+      username: ${DATASOURCE_WORKER_USERNAME}
+      password: ${DATASOURCE_WORKER_PASSWORD}
+      driver-class-name: ${env.datasource.worker.driver-class-name}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  logging:
+    level:
+      main: ${env.logging.level.main:ERROR}
+      root: ${env.logging.level.main:ERROR}
