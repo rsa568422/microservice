@@ -52,7 +52,7 @@ public class SchedulerService extends SchedulerDomainService<SchedulerRepository
 
     @Override
     public void registerNewScheduler(@NonNull NewSchedulerDTO newScheduler) {
-        final var worker = workerRepository.findByCode(UUID.fromString(newScheduler.workerCode()))
+        final var worker = workerRepository.findByCode(UUID.fromString(newScheduler.worker()))
                 .orElseThrow(() -> new NoSuchElementException("Worker not found"));
         save(schedulerMapper.toDomain(newScheduler.date(), worker));
     }

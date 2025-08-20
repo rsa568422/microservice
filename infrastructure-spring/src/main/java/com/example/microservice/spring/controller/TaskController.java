@@ -36,7 +36,7 @@ public class TaskController {
     }
 
     @PostMapping("/register")
-    ResponseEntity<Void> registerNewWorker(@RequestBody NewTaskDTO newTask) {
+    ResponseEntity<Void> registerNewTask(@RequestBody NewTaskDTO newTask) {
         registerNewTaskUseCase.registerNewTask(newTask);
         return ResponseEntity.ok().build();
     }

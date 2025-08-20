@@ -21,13 +21,14 @@ public class MyBatisConfiguration {
 
     @Bean(name = "mybatisDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.scheduler")
-    public DataSource mybatisDataSource() {
+    DataSource mybatisDataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "mybatisSqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(
-            @Qualifier("mybatisDataSource") DataSource dataSource) throws Exception {
+            @Qualifier("mybatisDataSource") DataSource dataSource
+    ) throws Exception {
         final var factory = new SqlSessionFactoryBean();
         factory.setDataSource(dataSource);
         factory.setTypeAliasesPackage("com.example.microservice.scheduler.entity");
@@ -35,7 +36,7 @@ public class MyBatisConfiguration {
         return factory.getObject();
     }
 
-    private org.apache.ibatis.session.Configuration mybatisConfiguration() {
+    org.apache.ibatis.session.Configuration mybatisConfiguration() {
         final var configuration = new org.apache.ibatis.session.Configuration();
         configuration.setMapUnderscoreToCamelCase(true);
         configuration.setLazyLoadingEnabled(true);
@@ -44,8 +45,9 @@ public class MyBatisConfiguration {
     }
 
     @Bean(name = "mybatisTransactionManager")
-    public DataSourceTransactionManager transactionManager(
-            @Qualifier("mybatisDataSource") DataSource dataSource) {
+    DataSourceTransactionManager transactionManager(
+            @Qualifier("mybatisDataSource") DataSource dataSource
+    ) {
         return new DataSourceTransactionManager(dataSource);
     }
 }

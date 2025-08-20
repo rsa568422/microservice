@@ -42,15 +42,15 @@ public class JpaConfiguration {
 
     @Bean(name = JPA_DATASOURCE)
     @ConfigurationProperties(prefix = JPA_DATASOURCE_PROPERTIES)
-    public DataSource jpaDataSource() {
+    DataSource jpaDataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean(name = JPA_ENTITY_MANAGER_FACTORY)
-    public LocalContainerEntityManagerFactoryBean jpaEntityManagerFactory(@Qualifier(JPA_DATASOURCE)
-                                                                          DataSource dataSource,
-                                                                          @Qualifier("jpaEntityManagerFactoryBuilder")
-                                                                          EntityManagerFactoryBuilder builder) {
+    LocalContainerEntityManagerFactoryBean jpaEntityManagerFactory(
+            @Qualifier(JPA_DATASOURCE) DataSource dataSource,
+            @Qualifier("jpaEntityManagerFactoryBuilder") EntityManagerFactoryBuilder builder
+    ) {
         return builder
                 .dataSource(dataSource)
                 .packages(JPA_ENTITY_PACKAGE)
@@ -60,21 +60,23 @@ public class JpaConfiguration {
     }
 
     @Bean(name = JPA_TRANSACTION_MANAGER)
-    public PlatformTransactionManager jpaTransactionManager(@Qualifier(JPA_ENTITY_MANAGER_FACTORY)
-                                                            EntityManagerFactory entityManagerFactory) {
+    PlatformTransactionManager jpaTransactionManager(
+            @Qualifier(JPA_ENTITY_MANAGER_FACTORY) EntityManagerFactory entityManagerFactory
+    ) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
     @Bean
-    public EntityManagerFactoryBuilder jpaEntityManagerFactoryBuilder(
+    EntityManagerFactoryBuilder jpaEntityManagerFactoryBuilder(
             @Qualifier("jpaVendorAdapter") JpaVendorAdapter jpaVendorAdapter,
-            ObjectProvider<PersistenceUnitManager> persistenceUnitManager) {
+            ObjectProvider<PersistenceUnitManager> persistenceUnitManager
+    ) {
         final Function<DataSource, Map<String, ?>> function = dataSource -> Map.of("task", dataSource);
         return new EntityManagerFactoryBuilder(jpaVendorAdapter, function, persistenceUnitManager.getIfAvailable());
     }
 
     @Bean
-    public JpaVendorAdapter jpaVendorAdapter() {
+    JpaVendorAdapter jpaVendorAdapter() {
         return new HibernateJpaVendorAdapter();
     }
 }

@@ -22,18 +22,18 @@ public class ServiceConfiguration {
     private final WorkerRepository workerRepository;
 
     @Bean
-    public SchedulerService schedulerService(SchedulerRepository schedulerRepository,
+    SchedulerService schedulerService(SchedulerRepository schedulerRepository,
                                              SchedulerMapper schedulerMapper) {
         return new SchedulerService(schedulerRepository, taskRepository, workerRepository, schedulerMapper);
     }
 
     @Bean
-    public TaskService taskService(TaskMapper taskMapper) {
+    TaskService taskService(TaskMapper taskMapper) {
         return new TaskService(taskRepository, taskMapper);
     }
 
     @Bean
-    public WorkerService workerService(WorkerMapper workerMapper) {
+    WorkerService workerService(WorkerMapper workerMapper) {
         return new WorkerService(workerRepository, workerMapper);
     }
 }

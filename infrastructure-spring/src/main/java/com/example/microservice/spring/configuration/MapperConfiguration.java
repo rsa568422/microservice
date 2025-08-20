@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
 public class MapperConfiguration {
 
     @Bean
-    public TaskMapper taskMapper() {
+    TaskMapper taskMapper() {
         return Mappers.getMapper(TaskMapper.class);
     }
 
     @Bean
-    public SchedulerMapper schedulerMapper() {
+    SchedulerMapper schedulerMapper() {
         return Mappers.getMapper(SchedulerMapper.class);
     }
 
     @Bean
-    public WorkerMapper workerMapper() {
+    WorkerMapper workerMapper() {
         return Mappers.getMapper(WorkerMapper.class);
     }
 }

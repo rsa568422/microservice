@@ -27,7 +27,12 @@ public class WorkerRepositoryAdapter implements WorkerRepository {
 
     @Override
     public Optional<Worker> findByCode(@NonNull UUID code) {
-        return Optional.empty();
+        final var worker = Worker.builder()
+                .code(code)
+                .name("John")
+                .surname("Doe")
+                .build();
+        return Optional.of(worker);
     }
 
     @Override

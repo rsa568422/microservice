@@ -39,15 +39,15 @@ public class JdbcConfiguration {
 
     @Bean(name = JDBC_DATASOURCE)
     @ConfigurationProperties(prefix = JDBC_DATASOURCE_PROPERTIES)
-    public DataSource jdbcDataSource() {
+    DataSource jdbcDataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean(name = JDBC_ENTITY_MANAGER_FACTORY)
-    public LocalContainerEntityManagerFactoryBean jdbcEntityManagerFactory(@Qualifier(JDBC_DATASOURCE)
-                                                                           DataSource dataSource,
-                                                                           @Qualifier("jdbcEntityManagerFactoryBuilder")
-                                                                           EntityManagerFactoryBuilder builder) {
+    LocalContainerEntityManagerFactoryBean jdbcEntityManagerFactory(
+            @Qualifier(JDBC_DATASOURCE) DataSource dataSource,
+            @Qualifier("jdbcEntityManagerFactoryBuilder") EntityManagerFactoryBuilder builder
+    ) {
         return builder
                 .dataSource(dataSource)
                 .packages(JDBC_ENTITY_PACKAGE)
@@ -56,26 +56,28 @@ public class JdbcConfiguration {
     }
 
     @Bean(name = JDBC_TRANSACTION_MANAGER)
-    public PlatformTransactionManager jdbcTransactionManager(@Qualifier(JDBC_ENTITY_MANAGER_FACTORY)
-                                                            EntityManagerFactory entityManagerFactory) {
+    PlatformTransactionManager jdbcTransactionManager(
+            @Qualifier(JDBC_ENTITY_MANAGER_FACTORY) EntityManagerFactory entityManagerFactory
+    ) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
     @Bean
-    public EntityManagerFactoryBuilder jdbcEntityManagerFactoryBuilder(
+    EntityManagerFactoryBuilder jdbcEntityManagerFactoryBuilder(
             @Qualifier("jdbcVendorAdapter") JpaVendorAdapter jpaVendorAdapter,
-            ObjectProvider<PersistenceUnitManager> persistenceUnitManager) {
+            ObjectProvider<PersistenceUnitManager> persistenceUnitManager
+    ) {
         final Function<DataSource, Map<String, ?>> function = dataSource -> Map.of("scheduler", dataSource);
         return new EntityManagerFactoryBuilder(jpaVendorAdapter, function, persistenceUnitManager.getIfAvailable());
     }
 
     @Bean
-    public JpaVendorAdapter jdbcVendorAdapter() {
+    JpaVendorAdapter jdbcVendorAdapter() {
         return new HibernateJpaVendorAdapter();
     }
 
     @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(@Qualifier(JDBC_DATASOURCE) DataSource dataSource) {
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate(@Qualifier(JDBC_DATASOURCE) DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
 }
