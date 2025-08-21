@@ -1,19 +1,14 @@
 package com.example.microservice.spring.controller;
 
-import com.example.microservice.application.dto.NewWorkerDTO;
-import com.example.microservice.application.port.in.GetAvailableWorkersUseCase;
+import com.example.microservice.application.port.in.GetAllWorkersUseCase;
 import com.example.microservice.application.port.in.RegisterNewWorkerUseCase;
-import com.example.microservice.domain.model.Worker;
+import com.example.microservice.spring.dto.NewWorkerRequest;
+import com.example.microservice.spring.dto.WorkerResponse;
+import com.example.microservice.spring.mapper.WorkerRestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,22 +16,24 @@ import java.util.List;
 @RequestMapping(("/worker"))
 public class WorkerController {
 
-    private final GetAvailableWorkersUseCase getAvailableWorkersUseCase;
+    private final GetAllWorkersUseCase getAllWorkersUseCase;
 
     private final RegisterNewWorkerUseCase registerNewWorkerUseCase;
 
-    @GetMapping("/available/{date}")
-    ResponseEntity<List<Worker>> getAvailableWorkers(@PathVariable("date") LocalDate date) {
-        final var workers = getAvailableWorkersUseCase.getAvailableWorkers(date);
+    private final WorkerRestMapper workerRestMapper;
+
+    @GetMapping
+    ResponseEntity<List<WorkerResponse>> getAllWorkers() {
+        final var workers = getAllWorkersUseCase.getAllWorkers();
         if (workers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(workers);
+        return ResponseEntity.ok(workerRestMapper.toResponse(workers));
     }
 
     @PostMapping("/register")
-    ResponseEntity<Void> registerNewWorker(@RequestBody NewWorkerDTO newWorker) {
-        registerNewWorkerUseCase.registerNewWorker(newWorker);
+    ResponseEntity<Void> registerNewWorker(@RequestBody NewWorkerRequest newWorker) {
+        registerNewWorkerUseCase.registerNewWorker(workerRestMapper.toDTO(newWorker));
         return ResponseEntity.ok().build();
     }
 }

@@ -19,7 +19,7 @@ import java.util.UUID;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
-public abstract class SchedulerMapper {
+public abstract class SchedulerJdbcMapper {
 
     @Autowired
     private TaskService taskService;

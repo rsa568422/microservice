@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
-public interface CommonMapper {
+public interface CommonRestMapper {
 
     default String toString(Duration duration) {
         if (Objects.isNull(duration)) {
@@ -34,15 +34,15 @@ public interface CommonMapper {
         if (Objects.isNull(duration)) {
             return null;
         }
-        if (Pattern.matches("^\\d h \\d min$", duration)) {
+        if (Pattern.matches("^\\d+ h \\d+ min$", duration)) {
             final var parts = duration.split(" h ");
             final var hours = Integer.parseInt(parts[0]);
             final var minutes = Integer.parseInt(parts[1].replace(" min", ""));
             return Duration.of((hours * 60L) + minutes, ChronoUnit.MINUTES);
-        } else if (Pattern.matches("^\\d h$", duration)) {
+        } else if (Pattern.matches("^\\d+ h$", duration)) {
             final var hours = Integer.parseInt(duration.replace(" h", ""));
             return Duration.of(hours, ChronoUnit.HOURS);
-        } else if (Pattern.matches("^\\d min$", duration)) {
+        } else if (Pattern.matches("^\\d+ min$", duration)) {
             final var minutes = Integer.parseInt(duration.replace(" min", ""));
             return Duration.of(minutes, ChronoUnit.MINUTES);
         } else {

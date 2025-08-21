@@ -4,7 +4,7 @@ import com.example.microservice.application.port.out.SchedulerRepository;
 import com.example.microservice.domain.model.Scheduler;
 import com.example.microservice.domain.model.Task;
 import com.example.microservice.scheduler.entity.SchedulerEntity;
-import com.example.microservice.scheduler.mapper.SchedulerMapper;
+import com.example.microservice.scheduler.mapper.SchedulerJdbcMapper;
 import com.example.microservice.scheduler.repository.SchedulerJdbcRepository;
 import com.example.microservice.scheduler.repository.SchedulerTaskJdbcRepository;
 import lombok.NonNull;
@@ -26,7 +26,7 @@ public class SchedulerRepositoryAdapter implements SchedulerRepository {
 
     private final SchedulerTaskJdbcRepository schedulerTaskJdbcRepository;
 
-    private final SchedulerMapper schedulerMapper;
+    private final SchedulerJdbcMapper schedulerJdbcMapper;
 
     @Override
     public List<Scheduler> findAll() {
@@ -76,8 +76,8 @@ public class SchedulerRepositoryAdapter implements SchedulerRepository {
     }
 
     private Scheduler toModel(@NonNull SchedulerEntity schedulerEntity) {
-        final var scheduler = schedulerMapper.toModel(schedulerEntity);
+        final var scheduler = schedulerJdbcMapper.toModel(schedulerEntity);
         final var taskCodes = schedulerTaskJdbcRepository.getTaskCodesByScheduler(scheduler.getCode());
-        return schedulerMapper.merge(scheduler, taskCodes);
+        return schedulerJdbcMapper.merge(scheduler, taskCodes);
     }
 }

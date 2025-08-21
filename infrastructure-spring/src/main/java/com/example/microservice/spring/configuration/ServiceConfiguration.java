@@ -23,7 +23,7 @@ public class ServiceConfiguration {
 
     @Bean
     SchedulerService schedulerService(SchedulerRepository schedulerRepository,
-                                             SchedulerMapper schedulerMapper) {
+                                      SchedulerMapper schedulerMapper) {
         return new SchedulerService(schedulerRepository, taskRepository, workerRepository, schedulerMapper);
     }
 

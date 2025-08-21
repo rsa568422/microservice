@@ -6,8 +6,7 @@ import com.example.microservice.application.port.in.RegisterNewSchedulerUseCase;
 import com.example.microservice.spring.dto.AddTaskToSchedulerRequest;
 import com.example.microservice.spring.dto.NewSchedulerRequest;
 import com.example.microservice.spring.dto.SchedulerResponse;
-import com.example.microservice.spring.mapper.SchedulerRequestMapper;
-import com.example.microservice.spring.mapper.SchedulerResponseMapper;
+import com.example.microservice.spring.mapper.SchedulerRestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +29,7 @@ public class SchedulerController {
 
     private final RegisterNewSchedulerUseCase registerNewSchedulerUseCase;
 
-    private final SchedulerResponseMapper schedulerResponseMapper;
-
-    private final SchedulerRequestMapper schedulerRequestMapper;
+    private final SchedulerRestMapper schedulerRestMapper;
 
     @PostMapping("/add")
     ResponseEntity<Void> addTasksToScheduler(@RequestBody AddTaskToSchedulerRequest request) {
@@ -45,14 +42,14 @@ public class SchedulerController {
     @GetMapping("/{worker}")
     ResponseEntity<SchedulerResponse> getActualSchedulerByWorker(@PathVariable("worker") String worker) {
         final var scheduler = getActualSchedulerByWorkerUseCase.getActualSchedulerByWorker(UUID.fromString(worker));
-        return scheduler.map(schedulerResponseMapper::toResponse)
+        return scheduler.map(schedulerRestMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @PostMapping("/register")
     ResponseEntity<Void> registerNewWorker(@RequestBody NewSchedulerRequest newScheduler) {
-        registerNewSchedulerUseCase.registerNewScheduler(schedulerRequestMapper.toDTO(newScheduler));
+        registerNewSchedulerUseCase.registerNewScheduler(schedulerRestMapper.toDTO(newScheduler));
         return ResponseEntity.ok().build();
     }
 }
