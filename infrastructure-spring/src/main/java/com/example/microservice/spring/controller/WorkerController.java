@@ -1,7 +1,6 @@
 package com.example.microservice.spring.controller;
 
-import com.example.microservice.application.port.in.GetAllWorkersUseCase;
-import com.example.microservice.application.port.in.RegisterNewWorkerUseCase;
+import com.example.microservice.application.service.WorkerService;
 import com.example.microservice.spring.dto.NewWorkerRequest;
 import com.example.microservice.spring.dto.WorkerResponse;
 import com.example.microservice.spring.mapper.WorkerRestMapper;
@@ -16,15 +15,13 @@ import java.util.List;
 @RequestMapping(("/worker"))
 public class WorkerController {
 
-    private final GetAllWorkersUseCase getAllWorkersUseCase;
-
-    private final RegisterNewWorkerUseCase registerNewWorkerUseCase;
+    private final WorkerService workerService;
 
     private final WorkerRestMapper workerRestMapper;
 
     @GetMapping
     ResponseEntity<List<WorkerResponse>> getAllWorkers() {
-        final var workers = getAllWorkersUseCase.getAllWorkers();
+        final var workers = workerService.getAllWorkers();
         if (workers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -33,7 +30,7 @@ public class WorkerController {
 
     @PostMapping("/register")
     ResponseEntity<Void> registerNewWorker(@RequestBody NewWorkerRequest newWorker) {
-        registerNewWorkerUseCase.registerNewWorker(workerRestMapper.toDTO(newWorker));
+        workerService.registerNewWorker(workerRestMapper.toDTO(newWorker));
         return ResponseEntity.ok().build();
     }
 }

@@ -9,6 +9,7 @@ import com.example.microservice.application.port.out.SchedulerRepository;
 import com.example.microservice.application.port.out.TaskRepository;
 import com.example.microservice.application.port.out.WorkerRepository;
 import com.example.microservice.domain.model.Scheduler;
+import com.example.microservice.domain.model.Status;
 import com.example.microservice.domain.service.SchedulerDomainService;
 import lombok.NonNull;
 
@@ -43,6 +44,8 @@ public class SchedulerService extends SchedulerDomainService<SchedulerRepository
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
         scheduler.addTask(task);
         save(scheduler);
+        task.setStatus(Status.WORKING);
+        taskRepository.save(task);
     }
 
     @Override

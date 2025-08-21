@@ -1,8 +1,6 @@
 package com.example.microservice.spring.controller;
 
-import com.example.microservice.application.port.in.AddTasksToSchedulerUseCase;
-import com.example.microservice.application.port.in.GetActualSchedulerByWorkerUseCase;
-import com.example.microservice.application.port.in.RegisterNewSchedulerUseCase;
+import com.example.microservice.application.service.SchedulerService;
 import com.example.microservice.spring.dto.AddTaskToSchedulerRequest;
 import com.example.microservice.spring.dto.NewSchedulerRequest;
 import com.example.microservice.spring.dto.SchedulerResponse;
@@ -23,11 +21,7 @@ import java.util.UUID;
 @RequestMapping(("/scheduler"))
 public class SchedulerController {
 
-    private final AddTasksToSchedulerUseCase addTasksToSchedulerUseCase;
-
-    private final GetActualSchedulerByWorkerUseCase getActualSchedulerByWorkerUseCase;
-
-    private final RegisterNewSchedulerUseCase registerNewSchedulerUseCase;
+    private final SchedulerService schedulerService;
 
     private final SchedulerRestMapper schedulerRestMapper;
 
@@ -35,13 +29,13 @@ public class SchedulerController {
     ResponseEntity<Void> addTasksToScheduler(@RequestBody AddTaskToSchedulerRequest request) {
         final var task = UUID.fromString(request.task());
         final var scheduler = UUID.fromString(request.scheduler());
-        addTasksToSchedulerUseCase.addTasksToScheduler(task, scheduler);
+        schedulerService.addTasksToScheduler(task, scheduler);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{worker}")
     ResponseEntity<SchedulerResponse> getActualSchedulerByWorker(@PathVariable("worker") String worker) {
-        final var scheduler = getActualSchedulerByWorkerUseCase.getActualSchedulerByWorker(UUID.fromString(worker));
+        final var scheduler = schedulerService.getActualSchedulerByWorker(UUID.fromString(worker));
         return scheduler.map(schedulerRestMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
@@ -49,7 +43,7 @@ public class SchedulerController {
 
     @PostMapping("/register")
     ResponseEntity<Void> registerNewWorker(@RequestBody NewSchedulerRequest newScheduler) {
-        registerNewSchedulerUseCase.registerNewScheduler(schedulerRestMapper.toDTO(newScheduler));
+        schedulerService.registerNewScheduler(schedulerRestMapper.toDTO(newScheduler));
         return ResponseEntity.ok().build();
     }
 }

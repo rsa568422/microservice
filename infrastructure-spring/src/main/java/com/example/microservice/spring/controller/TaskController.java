@@ -1,7 +1,6 @@
 package com.example.microservice.spring.controller;
 
-import com.example.microservice.application.port.in.GetPendingTasksByPriorityUseCase;
-import com.example.microservice.application.port.in.RegisterNewTaskUseCase;
+import com.example.microservice.application.service.TaskService;
 import com.example.microservice.spring.dto.NewTaskRequest;
 import com.example.microservice.spring.dto.TaskResponse;
 import com.example.microservice.spring.mapper.TaskRestMapper;
@@ -20,15 +19,13 @@ import java.util.List;
 @RequestMapping(("/task"))
 public class TaskController {
 
-    private final GetPendingTasksByPriorityUseCase getPendingTasksByPriorityUseCase;
-
-    private final RegisterNewTaskUseCase registerNewTaskUseCase;
+    private final TaskService taskService;
 
     private final TaskRestMapper taskRestMapper;
 
     @GetMapping("/pending")
     ResponseEntity<List<TaskResponse>> getPendingTasksByPriority() {
-        final var tasks = getPendingTasksByPriorityUseCase.getPendingTasksShortedByPriority();
+        final var tasks = taskService.getPendingTasksShortedByPriority();
         if (tasks.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -37,7 +34,7 @@ public class TaskController {
 
     @PostMapping("/register")
     ResponseEntity<Void> registerNewTask(@RequestBody NewTaskRequest newTask) {
-        registerNewTaskUseCase.registerNewTask(taskRestMapper.toDTO(newTask));
+        taskService.registerNewTask(taskRestMapper.toDTO(newTask));
         return ResponseEntity.ok().build();
     }
 }
