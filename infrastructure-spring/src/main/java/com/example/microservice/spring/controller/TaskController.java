@@ -1,10 +1,9 @@
 package com.example.microservice.spring.controller;
 
-import com.example.microservice.application.dto.NewTask;
-import com.example.microservice.application.dto.OutputTask;
-import com.example.microservice.application.usecase.GetPendingTasksByPriorityUseCase;
-import com.example.microservice.application.usecase.RegisterTaskUseCase;
-import com.example.microservice.domain.model.Priority;
+import com.example.microservice.application.service.TaskService;
+import com.example.microservice.spring.dto.NewTaskRequest;
+import com.example.microservice.spring.dto.TaskResponse;
+import com.example.microservice.spring.mapper.TaskRestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,26 +12,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/task")
+@RequestMapping(("/task"))
 public class TaskController {
 
-    private final GetPendingTasksByPriorityUseCase getPendingTasksByPriorityUseCase;
+    private final TaskService taskService;
 
-    private final RegisterTaskUseCase registerTaskUseCase;
+    private final TaskRestMapper taskRestMapper;
 
-    @GetMapping
-    public ResponseEntity<Map<Priority, Set<OutputTask>>> get() {
-        return ResponseEntity.ok(getPendingTasksByPriorityUseCase.execute());
+    @GetMapping("/pending")
+    ResponseEntity<List<TaskResponse>> getPendingTasksByPriority() {
+        final var tasks = taskService.getPendingTasksShortedByPriority();
+        if (tasks.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(taskRestMapper.toResponse(tasks));
     }
 
-    @PostMapping
-    public ResponseEntity<Void> save(@RequestBody NewTask task) {
-        registerTaskUseCase.execute(task);
+    @PostMapping("/register")
+    ResponseEntity<Void> registerNewTask(@RequestBody NewTaskRequest newTask) {
+        taskService.registerNewTask(taskRestMapper.toDTO(newTask));
         return ResponseEntity.ok().build();
     }
 }
