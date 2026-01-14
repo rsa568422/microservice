@@ -19,8 +19,6 @@ class SpringArchTest {
 
     @ArchTest
     static final ArchRule SPRING_DEPENDENCIES = classes()
-            .should().accessClassesThat()
-            .resideInAnyPackage(DOMAIN, APPLICATION, SCHEDULER, TASK, WORKER, SPRING, FRAMEWORK, JAVA)
-            .orShould().dependOnClassesThat()
+            .should().dependOnClassesThat()
             .resideInAnyPackage(DOMAIN, APPLICATION, SCHEDULER, TASK, WORKER, SPRING, FRAMEWORK, JAVA);
 }

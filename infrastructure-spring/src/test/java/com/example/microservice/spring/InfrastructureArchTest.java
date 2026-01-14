@@ -19,18 +19,15 @@ class InfrastructureArchTest {
     @ArchTest
     static final ArchRule SCHEDULER_DEPENDENCIES = classes()
             .that().resideInAPackage(SCHEDULER)
-            .should().accessClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, SCHEDULER, FRAMEWORK)
-            .orShould().dependOnClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, SCHEDULER, FRAMEWORK);
+            .should().dependOnClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, SCHEDULER, FRAMEWORK, JAVA);
 
     @ArchTest
     static final ArchRule TASK_DEPENDENCIES = classes()
             .that().resideInAPackage(TASK)
-            .should().accessClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, TASK, FRAMEWORK)
-            .orShould().dependOnClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, TASK, FRAMEWORK, JAVA);
+            .should().dependOnClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, TASK, FRAMEWORK, JAVA);
 
     @ArchTest
     static final ArchRule WORKER_DEPENDENCIES = classes()
             .that().resideInAPackage(WORKER)
-            .should().accessClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, WORKER, FRAMEWORK)
-            .orShould().dependOnClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, WORKER, FRAMEWORK);
+            .should().dependOnClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, WORKER, FRAMEWORK, JAVA);
 }

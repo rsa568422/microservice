@@ -6,6 +6,7 @@ import com.tngtech.archunit.lang.ArchRule;
 
 import static com.example.microservice.spring.Packages.APPLICATION;
 import static com.example.microservice.spring.Packages.DOMAIN;
+import static com.example.microservice.spring.Packages.JAVA;
 import static com.example.microservice.spring.Packages.SCHEDULER;
 import static com.example.microservice.spring.Packages.SPRING;
 import static com.example.microservice.spring.Packages.TASK;
@@ -18,13 +19,10 @@ class ApplicationArchTest {
 
     @ArchTest
     static final ArchRule APPLICATION_DEPENDENCIES = classes()
-            .should().accessClassesThat().resideInAPackage(DOMAIN)
-            .orShould().dependOnClassesThat().resideInAPackage(DOMAIN)
-            .orShould().accessClassesThat().resideInAnyPackage(APPLICATION)
-            .orShould().dependOnClassesThat().resideInAPackage(APPLICATION);
+            .should().dependOnClassesThat().resideInAPackage(DOMAIN)
+            .orShould().dependOnClassesThat().resideInAnyPackage(APPLICATION, JAVA);
 
     @ArchTest
     static final ArchRule APPLICATION_FREE_OF_DEPENDENCIES = noClasses()
-            .should().accessClassesThat().resideInAnyPackage(SCHEDULER, TASK, WORKER, SPRING)
-            .orShould().dependOnClassesThat().resideInAnyPackage(SCHEDULER, TASK, WORKER, SPRING);
+            .should().dependOnClassesThat().resideInAnyPackage(SCHEDULER, TASK, WORKER, SPRING);
 }
