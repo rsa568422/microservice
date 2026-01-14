@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.microservice.worker.repository.WorkerMyBatisRepository">
+
+    <resultMap id="WorkerEntityResultMap"
+               type="com.example.microservice.worker.entity.WorkerEntity">
+        <id property="code" column="code" />
+        <result property="name" column="name" />
+        <result property="surname" column="surname" />
+    </resultMap>
+
+    <select id="findByCode"
+            parameterType="java.util.UUID"
+            resultMap="WorkerEntityResultMap">
+        SELECT code, name, surname
+        FROM workers
+        WHERE code = #{code}
+    </select>
+
+    <select id="findAll"
+            resultMap="WorkerEntityResultMap">
+        SELECT code, name, surname FROM workers
+    </select>
+
+    <insert id="insert"
+            parameterType="com.example.microservice.worker.entity.WorkerEntity"
+            useGeneratedKeys="true"
+            keyProperty="code">
+        INSERT INTO workers (name, surname)
+        VALUES (#{name}, #{surname})
+    </insert>
+
+    <update id="update"
+            parameterType="com.example.microservice.worker.entity.WorkerEntity">
+        UPDATE workers
+        SET name = #{name}, surname = #{surname}
+        WHERE code = #{code}
+    </update>
+
+</mapper>

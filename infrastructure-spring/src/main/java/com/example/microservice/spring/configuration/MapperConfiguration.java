@@ -2,6 +2,7 @@ package com.example.microservice.spring.configuration;
 
 import com.example.microservice.application.mapper.SchedulerMapper;
 import com.example.microservice.application.mapper.TaskMapper;
+import com.example.microservice.application.mapper.WorkerMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +11,17 @@ import org.springframework.context.annotation.Configuration;
 public class MapperConfiguration {
 
     @Bean
-    public TaskMapper taskMapper() {
+    TaskMapper taskMapper() {
         return Mappers.getMapper(TaskMapper.class);
     }
 
     @Bean
-    public SchedulerMapper schedulerMapper() {
+    SchedulerMapper schedulerMapper() {
         return Mappers.getMapper(SchedulerMapper.class);
+    }
+
+    @Bean
+    WorkerMapper workerMapper() {
+        return Mappers.getMapper(WorkerMapper.class);
     }
 }

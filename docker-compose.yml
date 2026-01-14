@@ -1,25 +1,35 @@
 services:
-  jpa:
+  scheduler_db:
     image: postgres:latest
     ports:
-      - 5433:5432
+      - "0001:5432"
     environment:
-      POSTGRES_DB: jpa
+      POSTGRES_DB: schedulers
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     volumes:
-      - jpa_data:/var/lib/jpa/data
-  mybatis:
+      - scheduler_data:/var/lib/scheduler/data
+  task_db:
     image: postgres:latest
     ports:
-      - 5434:5432
+      - "0002:5432"
     environment:
-      POSTGRES_DB: mybatis
+      POSTGRES_DB: tasks
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     volumes:
-      - mybatis_data:/var/lib/mybatis/data
-
+      - task_data:/var/lib/task/data
+  worker_db:
+    image: postgres:latest
+    ports:
+      - "0003:5432"
+    environment:
+      POSTGRES_DB: workers
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - worker_data:/var/lib/worker/data
 volumes:
-  jpa_data:
-  mybatis_data:
+  task_data:
+  scheduler_data:
+  worker_data:
