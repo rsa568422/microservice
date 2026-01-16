@@ -23,8 +23,7 @@ class ApplicationArchTest {
 
     @ArchTest
     static final ArchRule APPLICATION_DEPENDENCIES = classes()
-            .should().dependOnClassesThat().resideInAPackage(DOMAIN)
-            .orShould().dependOnClassesThat().resideInAnyPackage(APPLICATION, JAVA);
+            .should().dependOnClassesThat().resideInAnyPackage(DOMAIN, APPLICATION, JAVA);
 
     @ArchTest
     static final ArchRule APPLICATION_FREE_OF_DEPENDENCIES = noClasses()
